@@ -268,107 +268,20 @@
         <section id="viewStudentDashboard" class="hidden space-y-6">
             
             <!-- Banner Mode Inspeksi Guru -->
-            <div id="teacherInspectionBanner" class="hidden bg-amber-500 text-slate-900 px-4 py-3 rounded-2xl shadow-md flex items-center justify-between gap-3 font-bold text-xs border border-amber-400">
+            <div id="teacherInspectionBanner" class="hidden bg-amber-500 text-slate-900 px-4 py-3 rounded-2xl shadow-md flex flex-wrap items-center justify-between gap-3 font-bold text-xs border border-amber-400">
                 <div class="flex items-center gap-2">
                     <i class="fa-solid fa-user-shield text-base text-slate-950"></i>
-                    <span>MODE INSPEKSI GURU — Anda sedang memeriksa lembar pengerjaan murid secara langsung.</span>
+                    <span>MODE INSPEKSI GURU — Nilai tersimpan otomatis.</span>
+                    <span id="teacherScoreSaveStatus" class="bg-slate-900/15 text-slate-950 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold">
+                        <i class="fa-solid fa-check-circle text-emerald-800 mr-1"></i>Tersimpan
+                    </span>
                 </div>
-                <button onclick="exitTeacherInspection()" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-xl font-extrabold text-xs shadow flex items-center gap-1.5 transition flex-shrink-0">
-                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Guru
-                </button>
-            </div>
-
-            <div class="bg-gradient-to-r from-blue-900 via-indigo-800 to-indigo-900 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
-                <div class="relative z-10 flex flex-wrap items-center justify-between gap-4">
-                    <div class="space-y-1">
-                        <div class="flex flex-wrap items-center gap-2">
-                            <span id="stDashClassBadge" class="bg-amber-400 text-slate-900 text-xs font-extrabold px-3 py-0.5 rounded-full uppercase">Kelas --</span>
-                            <span class="bg-white/20 text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">Murid Terverifikasi</span>
-                            <span id="teacherTotalScoreBadge" class="hidden bg-rose-500 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-rose-400 shadow-md">
-                                <i class="fa-solid fa-star text-amber-300 mr-1"></i> Total Nilai Guru: <span id="teacherTotalScoreDisplay">0</span>
-                            </span>
-                            <span id="stRealtimeSyncBadge" class="bg-emerald-500/30 text-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-400/30 hidden">
-                                <i class="fa-solid fa-cloud mr-1"></i> Terhubung Spreadsheet
-                            </span>
-                            <span class="bg-white/10 text-blue-100 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-white/20 flex items-center gap-1.5">
-                                <i class="fa-solid fa-arrows-rotate text-amber-300 animate-spin"></i>
-                                Auto Sync: <span id="stTimerCountdown" class="text-amber-300 font-black">30</span>s
-                            </span>
-                        </div>
-                        <h2 id="stDashName" class="text-2xl font-black">--</h2>
-                        <p id="stDashMatchNote" class="text-xs text-blue-200">Terdaftar atas nama lengkap ini</p>
-                    </div>
-
-                    <div class="flex flex-wrap items-center gap-2.5">
-                        <div class="bg-white/10 p-2.5 px-3 rounded-xl border border-white/20 text-center min-w-[90px]">
-                            <span class="text-[10px] text-blue-200 block uppercase font-bold">Total Tugas</span>
-                            <span class="text-xl font-black text-amber-300">9 Soal</span>
-                        </div>
-                        
-                        <button onclick="manualRefreshStudentDashboard()" id="btnStManualRefresh" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white px-3.5 py-3 rounded-xl font-bold text-xs shadow-md transition flex items-center gap-2" title="Tarik data terbaru dari Google Spreadsheet">
-                            <i class="fa-solid fa-arrows-rotate text-amber-300" id="iconStRefresh"></i>
-                            <span class="hidden sm:inline">Refresh Data Sheet</span>
-                        </button>
-
-                        <button onclick="openProofModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-xl font-bold text-xs shadow-lg transition flex items-center gap-2">
-                            <i class="fa-solid fa-file-pdf text-base"></i>
-                            <div class="text-left">
-                                <span class="block leading-none">Bukti Pengumpulan</span>
-                                <span class="text-[10px] font-normal opacity-90">Cetak / Simpan PDF</span>
-                            </div>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl text-xs text-amber-900 space-y-1 shadow-sm">
-                <p class="font-bold flex items-center gap-1.5 text-amber-800">
-                    <i class="fa-solid fa-circle-info text-amber-600"></i> Informasi Pengumpulan:
-                </p>
-                <ul class="list-disc list-inside space-y-0.5 text-amber-800 pl-1">
-                    <li>Semua murid wajib mengumpulkan jawaban beserta cara kerjanya untuk 9 soal Aljabar di bawah ini.</li>
-                    <li>Foto lembar jawaban yang diunggah per nomor otomatis tersimpan ke Google Sheet secara *real-time*.</li>
-                </ul>
-            </div>
-
-            <div id="stQuestionsList" class="space-y-6"></div>
-
-            <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 text-center space-y-3">
-                <div id="stProgressStatus" class="text-xs text-slate-500 hidden">
-                    <i class="fa-solid fa-spinner animate-spin text-blue-600 mr-1"></i> Menyimpan data & mengirim ke Google Sheet...
-                </div>
-            </div>
-        </section>
-
-        <section id="viewTeacherDashboard" class="hidden space-y-6">
-            <div class="flex flex-wrap items-center justify-between gap-4">
-                <div>
-                    <h2 class="text-2xl font-black text-slate-900">Dashboard Monitor Guru</h2>
-                    <p class="text-xs text-slate-500">Pantau status pengerjaan latihan Aljabar Kelas 7.3 dan 7.4 secara langsung.</p>
-                </div>
-                
-                <div class="flex flex-wrap items-center gap-2">
-                    <div class="bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-sm text-xs font-bold text-slate-600 flex items-center gap-1.5">
-                        <i class="fa-solid fa-arrows-rotate text-blue-600 animate-spin"></i>
-                        <span>Auto Sync Sheet:</span>
-                        <span id="teacherTimerCountdown" class="text-blue-600 font-extrabold">30</span>s
-                    </div>
-
-                    <button onclick="manualRefreshTeacherDashboard()" id="btnTeacherRefresh" class="bg-amber-400 hover:bg-amber-300 text-slate-900 px-3.5 py-2.5 rounded-xl text-xs font-extrabold shadow flex items-center gap-1.5 transition" title="Tarik data terbaru dari Google Spreadsheet">
-                        <i class="fa-solid fa-rotate" id="iconTeacherRefresh"></i>
-                        <span id="teacherSyncStatusText">Refresh Data Spreadsheet</span>
+                <div class="flex items-center gap-2 flex-shrink-0">
+                    <button onclick="saveCurrentStudentScoreToCloud(true)" id="btnSaveScoreCloud" class="bg-emerald-700 hover:bg-emerald-800 text-white px-3.5 py-2 rounded-xl font-extrabold text-xs shadow flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-cloud-arrow-up"></i> Simpan ke Sheet
                     </button>
-
-                    <button onclick="copyTeacherScores()" class="bg-rose-600 hover:bg-rose-700 text-white px-3.5 py-2.5 rounded-xl text-xs font-bold shadow flex items-center gap-2 transition" title="Salin nilai yang diinput guru ke Excel">
-                        <i class="fa-solid fa-copy"></i> Salin Nilai Guru
-                    </button>
-
-                    <button onclick="openTeacherPdfModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2.5 rounded-xl text-xs font-bold shadow flex items-center gap-2 transition">
-                        <i class="fa-solid fa-file-pdf"></i> Export Rekap PDF / Rapot
-                    </button>
-
-                    <button onclick="exportTeacherSummaryExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2.5 rounded-xl text-xs font-bold shadow flex items-center gap-2 transition">
-                        <i class="fa-solid fa-file-excel"></i> Export CSV / Excel
+                    <button onclick="exitTeacherInspection()" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-xl font-extrabold text-xs shadow flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-arrow-left"></i> Kembali ke Dashboard Guru
                     </button>
                 </div>
             </div>
@@ -724,40 +637,24 @@
 
         let photoEditModes = {};
         let studentSubmissions = {};
-        let teacherScores = {}; // State untuk menyimpan nilai inputan guru secara lokal
-
-        let autoRefreshTimer = null;
-        const REFRESH_INTERVAL_SECONDS = 30;
-        let currentCountdown = REFRESH_INTERVAL_SECONDS;
-
-        // Since it's not remedial, everyone gets all 9 questions.
-        function getRequiredQuestions() {
-            return [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        
+        // Muat nilai guru dari localStorage agar tidak hilang saat halaman ditutup/refresh
+        const TEACHER_SCORES_STORAGE_KEY = 'almazaya_aljabar_teacher_scores_v1';
+        let teacherScores = {};
+        try {
+            const savedScoresRaw = localStorage.getItem(TEACHER_SCORES_STORAGE_KEY);
+            if (savedScoresRaw) teacherScores = JSON.parse(savedScoresRaw);
+        } catch (e) {
+            console.warn("Gagal memuat nilai dari localStorage:", e);
+            teacherScores = {};
         }
+        let scoreAutoSaveTimer = null;
 
-        function startAutoRefreshTimer(mode) {
-            stopAutoRefreshTimer();
-            currentCountdown = REFRESH_INTERVAL_SECONDS;
-            updateCountdownUI(mode, currentCountdown);
-
-            autoRefreshTimer = setInterval(() => {
-                currentCountdown--;
-                if (currentCountdown <= 0) {
-                    currentCountdown = REFRESH_INTERVAL_SECONDS;
-                    if (mode === 'student') {
-                        executeStudentRefresh(true);
-                    } else if (mode === 'teacher') {
-                        executeTeacherRefresh(true);
-                    }
-                }
-                updateCountdownUI(mode, currentCountdown);
-            }, 1000);
-        }
-
-        function stopAutoRefreshTimer() {
-            if (autoRefreshTimer) {
-                clearInterval(autoRefreshTimer);
-                autoRefreshTimer = null;
+        function saveTeacherScoresLocal() {
+            try {
+                localStorage.setItem(TEACHER_SCORES_STORAGE_KEY, JSON.stringify(teacherScores));
+            } catch (e) {
+                console.warn("Gagal menyimpan nilai ke localStorage:", e);
             }
         }
 
@@ -1317,6 +1214,20 @@
                             }
                         });
                     });
+
+                    // Sinkronisasi nilai guru dari Spreadsheet jika tersedia
+                    if (resData.scores && typeof resData.scores === 'object') {
+                        for (let stId in resData.scores) {
+                            if (!teacherScores[stId]) teacherScores[stId] = {};
+                            for (let qNo in resData.scores[stId]) {
+                                const remoteVal = resData.scores[stId][qNo];
+                                if (remoteVal !== undefined && remoteVal !== '') {
+                                    teacherScores[stId][qNo] = parseFloat(remoteVal) || 0;
+                                }
+                            }
+                        }
+                        saveTeacherScoresLocal();
+                    }
                 }
             } catch (err) {
                 console.log("Catatan Sync Spreadsheet Guru:", err.message);
@@ -1416,9 +1327,85 @@
 
         function updateTeacherScore(studentId, qNo, value) {
             if (!teacherScores[studentId]) teacherScores[studentId] = {};
-            teacherScores[studentId][qNo] = parseFloat(value) || 0;
+            teacherScores[studentId][qNo] = value === '' ? 0 : (parseFloat(value) || 0);
+            
+            // 1. Simpan instan ke penyimpanan browser (localStorage)
+            saveTeacherScoresLocal();
             recalculateTeacherTotalScore(studentId);
-            renderTeacherTable(); // Memperbarui total skor di tabel dashboard saat diketik
+            renderTeacherTable();
+
+            // 2. Auto-save ke Google Spreadsheet (jeda 1.2 detik setelah selesai mengetik)
+            setScoreSaveStatusUI('saving');
+            if (scoreAutoSaveTimer) clearTimeout(scoreAutoSaveTimer);
+            scoreAutoSaveTimer = setTimeout(() => {
+                saveCurrentStudentScoreToCloud(false);
+            }, 1200);
+        }
+
+        function setScoreSaveStatusUI(state) {
+            const el = document.getElementById('teacherScoreSaveStatus');
+            if (!el) return;
+            if (state === 'saving') {
+                el.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-amber-900 mr-1"></i>Menyimpan...';
+            } else if (state === 'saved_cloud') {
+                el.innerHTML = '<i class="fa-solid fa-cloud-check text-emerald-800 mr-1"></i>Tersimpan di Browser & Sheet';
+            } else if (state === 'saved_local') {
+                el.innerHTML = '<i class="fa-solid fa-check-circle text-emerald-800 mr-1"></i>Tersimpan di Browser';
+            }
+        }
+
+        async function saveCurrentStudentScoreToCloud(showAlert = false) {
+            if (!currentUser || !currentUser.studentObj) return;
+            const st = currentUser.studentObj;
+            const scoresObj = teacherScores[st.id] || {};
+            
+            let total = 0;
+            for (let i = 1; i <= 9; i++) {
+                total += (parseFloat(scoresObj[i]) || 0);
+            }
+
+            const btn = document.getElementById('btnSaveScoreCloud');
+            if (btn && showAlert) {
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menyimpan...';
+            }
+            setScoreSaveStatusUI('saving');
+
+            try {
+                const payload = {
+                    action: 'saveTeacherScore',
+                    studentId: st.id,
+                    studentName: st.name,
+                    className: currentUser.classCode,
+                    scores: scoresObj,
+                    totalScore: total,
+                    updatedAt: new Date().toLocaleString('id-ID')
+                };
+
+                await fetch(DEFAULT_SCRIPT_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                saveTeacherScoresLocal();
+                setScoreSaveStatusUI('saved_cloud');
+                if (showAlert) {
+                    showCustomModal('Nilai Tersimpan! ☁️', `Nilai untuk ${st.name} (Total: ${total}) berhasil disimpan ke browser dan dikirim ke Google Spreadsheet.`, 'success');
+                }
+            } catch (err) {
+                saveTeacherScoresLocal();
+                setScoreSaveStatusUI('saved_local');
+                if (showAlert) {
+                    showCustomModal('Tersimpan di Browser', `Nilai ${st.name} aman tersimpan di perangkat ini, namun gagal sinkron ke server.`, 'warning');
+                }
+            } finally {
+                if (btn && showAlert) {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> Simpan ke Sheet';
+                }
+            }
         }
 
         function recalculateTeacherTotalScore(studentId) {
@@ -1449,11 +1436,22 @@
                 });
             });
 
-            navigator.clipboard.writeText(tsv).then(() => {
-                showCustomModal("Data Berhasil Disalin! 📋", "Seluruh rekap nilai guru berhasil disalin ke Clipboard. Silakan langsung Paste (Ctrl+V) di Excel atau Google Spreadsheet. Pastikan paste sebelum merefresh halaman ini.", "success");
-            }).catch(err => {
+            // Gunakan fallback textarea agar selalu berhasil di semua browser/iframe
+            const textArea = document.createElement("textarea");
+            textArea.value = tsv;
+            textArea.style.position = "fixed";
+            textArea.style.opacity = "0";
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+
+            try {
+                document.execCommand('copy');
+                showCustomModal("Data Berhasil Disalin! 📋", "Seluruh rekap nilai guru berhasil disalin ke Clipboard. Silakan langsung Paste (Ctrl+V) di Excel atau Google Spreadsheet.", "success");
+            } catch (err) {
                 showCustomModal("Gagal Menyalin", "Gagal menyalin data ke Clipboard. Silakan cek perizinan browser Anda.", "error");
-            });
+            }
+            document.body.removeChild(textArea);
         }
 
         function inspectStudentFromTeacher(studentId, classCode) {
