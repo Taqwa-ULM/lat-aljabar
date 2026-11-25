@@ -39,6 +39,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen flex flex-col justify-between antialiased">
 
+    <!-- HEADER NAVIGASI -->
     <header class="gradient-bg text-white shadow-md sticky top-0 z-40">
         <div class="max-w-6xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-3">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="showView('home')">
@@ -70,6 +71,7 @@
 
     <main class="max-w-6xl mx-auto px-4 py-6 flex-grow w-full space-y-6">
 
+        <!-- VIEW 1: HOME -->
         <section id="viewHome" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
                 <!-- Card Kelas 7.3 -->
@@ -146,6 +148,7 @@
             </div>
         </section>
 
+        <!-- VIEW 2: LIST MURID -->
         <section id="viewStudentList" class="hidden space-y-6 max-w-4xl mx-auto">
             <button onclick="showView('home')" class="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1.5 transition">
                 <i class="fa-solid fa-arrow-left"></i> Kembali ke Menu Utama
@@ -179,6 +182,7 @@
             </div>
         </section>
 
+        <!-- VIEW 3: LOGIN MURID -->
         <section id="viewStudentAuth" class="hidden max-w-md mx-auto space-y-6">
             <button onclick="showView('home')" class="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1.5 transition">
                 <i class="fa-solid fa-arrow-left"></i> Kembali ke Menu Utama
@@ -225,6 +229,7 @@
             </div>
         </section>
 
+        <!-- VIEW 4: LOGIN GURU -->
         <section id="viewTeacherAuth" class="hidden max-w-md mx-auto space-y-6">
             <button onclick="showView('home')" class="text-xs font-bold text-slate-600 hover:text-slate-800 flex items-center gap-1.5 transition">
                 <i class="fa-solid fa-arrow-left"></i> Kembali ke Menu Utama
@@ -265,11 +270,12 @@
             </div>
         </section>
 
+        <!-- VIEW 5: DASHBOARD MURID & MODE INSPEKSI GURU -->
         <section id="viewStudentDashboard" class="hidden space-y-6">
             
-            <!-- Banner Mode Inspeksi Guru -->
+            <!-- Banner Mode Inspeksi Guru dengan Auto-Save & Tombol Simpan Manual -->
             <div id="teacherInspectionBanner" class="hidden bg-amber-500 text-slate-900 px-4 py-3 rounded-2xl shadow-md flex flex-wrap items-center justify-between gap-3 font-bold text-xs border border-amber-400">
-                <div class="flex items-center gap-2">
+                <div class="flex flex-wrap items-center gap-2">
                     <i class="fa-solid fa-user-shield text-base text-slate-950"></i>
                     <span>MODE INSPEKSI GURU — Nilai tersimpan otomatis.</span>
                     <span id="teacherScoreSaveStatus" class="bg-slate-900/15 text-slate-950 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold">
@@ -286,6 +292,105 @@
                 </div>
             </div>
 
+            <!-- Kartu Profil Murid -->
+            <div class="bg-gradient-to-r from-blue-900 via-indigo-800 to-indigo-900 text-white rounded-2xl p-6 shadow-xl relative overflow-hidden">
+                <div class="relative z-10 flex flex-wrap items-center justify-between gap-4">
+                    <div class="space-y-1">
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span id="stDashClassBadge" class="bg-amber-400 text-slate-900 text-xs font-extrabold px-3 py-0.5 rounded-full uppercase">Kelas --</span>
+                            <span class="bg-white/20 text-white text-[11px] font-medium px-2.5 py-0.5 rounded-full">Murid Terverifikasi</span>
+                            <span id="teacherTotalScoreBadge" class="hidden bg-rose-500 text-white text-[11px] font-extrabold px-2.5 py-0.5 rounded-full border border-rose-400 shadow-md">
+                                <i class="fa-solid fa-star text-amber-300 mr-1"></i> Total Nilai Guru: <span id="teacherTotalScoreDisplay">0</span>
+                            </span>
+                            <span id="stRealtimeSyncBadge" class="bg-emerald-500/30 text-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-full border border-emerald-400/30 hidden">
+                                <i class="fa-solid fa-cloud mr-1"></i> Terhubung Spreadsheet
+                            </span>
+                            <span class="bg-white/10 text-blue-100 text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-white/20 flex items-center gap-1.5">
+                                <i class="fa-solid fa-arrows-rotate text-amber-300 animate-spin"></i>
+                                Auto Sync: <span id="stTimerCountdown" class="text-amber-300 font-black">30</span>s
+                            </span>
+                        </div>
+                        <h2 id="stDashName" class="text-2xl font-black">--</h2>
+                        <p id="stDashMatchNote" class="text-xs text-blue-200">Terdaftar atas nama lengkap ini</p>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-2.5">
+                        <div class="bg-white/10 p-2.5 px-3 rounded-xl border border-white/20 text-center min-w-[90px]">
+                            <span class="text-[10px] text-blue-200 block uppercase font-bold">Total Tugas</span>
+                            <span class="text-xl font-black text-amber-300">9 Soal</span>
+                        </div>
+                        
+                        <button onclick="manualRefreshStudentDashboard()" id="btnStManualRefresh" class="bg-white/10 hover:bg-white/20 border border-white/30 text-white px-3.5 py-3 rounded-xl font-bold text-xs shadow-md transition flex items-center gap-2" title="Tarik data terbaru dari Google Spreadsheet">
+                            <i class="fa-solid fa-arrows-rotate text-amber-300" id="iconStRefresh"></i>
+                            <span class="hidden sm:inline">Refresh Data Sheet</span>
+                        </button>
+
+                        <button onclick="openProofModal()" class="bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-3 rounded-xl font-bold text-xs shadow-lg transition flex items-center gap-2">
+                            <i class="fa-solid fa-file-pdf text-base"></i>
+                            <div class="text-left">
+                                <span class="block leading-none">Bukti Pengumpulan</span>
+                                <span class="text-[10px] font-normal opacity-90">Cetak / Simpan PDF</span>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl text-xs text-amber-900 space-y-1 shadow-sm">
+                <p class="font-bold flex items-center gap-1.5 text-amber-800">
+                    <i class="fa-solid fa-circle-info text-amber-600"></i> Informasi Pengumpulan:
+                </p>
+                <ul class="list-disc list-inside space-y-0.5 text-amber-800 pl-1">
+                    <li>Semua murid wajib mengumpulkan jawaban beserta cara kerjanya untuk 9 soal Aljabar di bawah ini.</li>
+                    <li>Foto lembar jawaban yang diunggah per nomor otomatis tersimpan ke Google Sheet secara <em>real-time</em>.</li>
+                </ul>
+            </div>
+
+            <!-- Daftar Soal -->
+            <div id="stQuestionsList" class="space-y-6"></div>
+
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-slate-200 text-center space-y-3">
+                <div id="stProgressStatus" class="text-xs text-slate-500 hidden">
+                    <i class="fa-solid fa-spinner animate-spin text-blue-600 mr-1"></i> Menyimpan data & mengirim ke Google Sheet...
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 6: DASHBOARD MONITOR GURU -->
+        <section id="viewTeacherDashboard" class="hidden space-y-6">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div>
+                    <h2 class="text-2xl font-black text-slate-900">Dashboard Monitor Guru</h2>
+                    <p class="text-xs text-slate-500">Pantau status pengerjaan latihan Aljabar Kelas 7.3 dan 7.4 secara langsung.</p>
+                </div>
+                
+                <div class="flex flex-wrap items-center gap-2">
+                    <div class="bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-sm text-xs font-bold text-slate-600 flex items-center gap-1.5">
+                        <i class="fa-solid fa-arrows-rotate text-blue-600 animate-spin"></i>
+                        <span>Auto Sync Sheet:</span>
+                        <span id="teacherTimerCountdown" class="text-blue-600 font-extrabold">30</span>s
+                    </div>
+
+                    <button onclick="manualRefreshTeacherDashboard()" id="btnTeacherRefresh" class="bg-amber-400 hover:bg-amber-300 text-slate-900 px-3.5 py-2.5 rounded-xl text-xs font-extrabold shadow flex items-center gap-1.5 transition" title="Tarik data terbaru dari Google Spreadsheet">
+                        <i class="fa-solid fa-rotate" id="iconTeacherRefresh"></i>
+                        <span id="teacherSyncStatusText">Refresh Data Spreadsheet</span>
+                    </button>
+
+                    <button onclick="copyTeacherScores()" class="bg-rose-600 hover:bg-rose-700 text-white px-3.5 py-2.5 rounded-xl text-xs font-bold shadow flex items-center gap-2 transition" title="Salin nilai yang diinput guru ke Excel">
+                        <i class="fa-solid fa-copy"></i> Salin Nilai Guru
+                    </button>
+
+                    <button onclick="openTeacherPdfModal()" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2.5 rounded-xl text-xs font-bold shadow flex items-center gap-2 transition">
+                        <i class="fa-solid fa-file-pdf"></i> Export Rekap PDF / Rapot
+                    </button>
+
+                    <button onclick="exportTeacherSummaryExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3.5 py-2.5 rounded-xl text-xs font-bold shadow flex items-center gap-2 transition">
+                        <i class="fa-solid fa-file-excel"></i> Export CSV / Excel
+                    </button>
+                </div>
+            </div>
+
+            <!-- Statistik Ringkas -->
             <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                 <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
                     <div>
@@ -328,6 +433,7 @@
                 </div>
             </div>
 
+            <!-- Filter & Pencarian Guru -->
             <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-wrap items-center justify-between gap-4">
                 <div class="flex items-center gap-2">
                     <button onclick="setTeacherFilterClass('ALL')" id="filterClassALL" class="px-3.5 py-2 rounded-xl text-xs font-bold transition bg-blue-600 text-white shadow">
@@ -349,6 +455,7 @@
                 </div>
             </div>
 
+            <!-- Tabel Monitor Guru -->
             <div class="bg-white rounded-2xl border border-slate-200 shadow-md overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-xs">
@@ -371,6 +478,7 @@
 
     </main>
 
+    <!-- MODAL BUKTI PENGUMPULAN -->
     <div id="proofModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
             <div class="p-4 bg-blue-900 text-white flex justify-between items-center no-print">
@@ -443,6 +551,7 @@
         </div>
     </div>
 
+    <!-- MODAL NOTIFIKASI -->
     <div id="customModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl space-y-4 text-center">
             <div id="modalIconContainer" class="w-14 h-14 rounded-full flex items-center justify-center mx-auto text-2xl"></div>
@@ -454,6 +563,7 @@
         </div>
     </div>
 
+    <!-- MODAL PREVIEW GAMBAR -->
     <div id="imagePreviewModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-md z-50 hidden flex flex-col items-center justify-center p-4">
         <div class="relative max-w-4xl w-full max-h-[90vh] flex flex-col items-center justify-center space-y-3">
             <div class="w-full flex items-center justify-between no-print px-2">
@@ -473,6 +583,7 @@
         </div>
     </div>
 
+    <!-- MODAL REKAP PDF GURU -->
     <div id="teacherPdfModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
             <div class="p-4 bg-slate-900 text-white flex justify-between items-center no-print">
@@ -501,6 +612,7 @@
                                 <th class="border border-slate-300 p-1.5 text-left">Nama Murid</th>
                                 <th class="border border-slate-300 p-1.5 text-center w-24">Beban Soal</th>
                                 <th class="border border-slate-300 p-1.5 text-center w-24">Terkumpul</th>
+                                <th class="border border-slate-300 p-1.5 text-center w-20">Nilai</th>
                                 <th class="border border-slate-300 p-1.5 text-center w-28">Status</th>
                             </tr>
                         </thead>
@@ -520,6 +632,7 @@
                                 <th class="border border-slate-300 p-1.5 text-left">Nama Murid</th>
                                 <th class="border border-slate-300 p-1.5 text-center w-24">Beban Soal</th>
                                 <th class="border border-slate-300 p-1.5 text-center w-24">Terkumpul</th>
+                                <th class="border border-slate-300 p-1.5 text-center w-20">Nilai</th>
                                 <th class="border border-slate-300 p-1.5 text-center w-28">Status</th>
                             </tr>
                         </thead>
@@ -549,7 +662,7 @@
         // HARDCODED GOOGLE APPS SCRIPT ENDPOINT
         const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxaAMQ9sBAlGnt3cXc4hm2WRBqcLHx9xH-y7WOUAQqaxJlncf3rdxT7-jB5qvysR56P/exec";
 
-        // HELPER TO CONVERT GOOGLE DRIVE URL TO DIRECT IMAGE URL
+        // HELPER KONVERSI URL GOOGLE DRIVE KE DIRECT IMAGE
         function getDirectImageUrl(url) {
             if (!url) return '';
             if (url.startsWith('data:image')) return url;
@@ -561,7 +674,7 @@
             return url;
         }
 
-        // QUESTION DATABASE DEFINITION (Transcribed from Whiteboard & Formatted with LaTeX)
+        // DATABASE SOAL ALJABAR (Format MathJax LaTeX)
         const QUESTION_DB = {
             1: { num: 1, bab: "Aljabar - Penyederhanaan", text: "\\( -(4a + 7) + 3(a + 5) \\)" },
             2: { num: 2, bab: "Aljabar - Penyederhanaan", text: "\\( 6(2x + 4) - 8(3 - x) \\)" },
@@ -574,6 +687,7 @@
             9: { num: 9, bab: "Aljabar - Substitusi", text: "Hitunglah untuk \\( x = 2 \\), \\( y = 3 \\) dari bentuk aljabar: <br> \\( x \\times y \\times y \\times x \\times y \\)" }
         };
 
+        // DATABASE MURID KELAS 7.3 & 7.4
         const STUDENTS_DATA = {
             "7.3": [
                 { id: "73_01", name: "Aqila Zahraa Khairunnisa", nickname: "Aqila" },
@@ -637,8 +751,8 @@
 
         let photoEditModes = {};
         let studentSubmissions = {};
-        
-        // Muat nilai guru dari localStorage agar tidak hilang saat halaman ditutup/refresh
+
+        // Muat nilai guru dari localStorage agar tidak hilang saat refresh/tutup tab
         const TEACHER_SCORES_STORAGE_KEY = 'almazaya_aljabar_teacher_scores_v1';
         let teacherScores = {};
         try {
@@ -650,11 +764,45 @@
         }
         let scoreAutoSaveTimer = null;
 
+        let autoRefreshTimer = null;
+        const REFRESH_INTERVAL_SECONDS = 30;
+        let currentCountdown = REFRESH_INTERVAL_SECONDS;
+
         function saveTeacherScoresLocal() {
             try {
                 localStorage.setItem(TEACHER_SCORES_STORAGE_KEY, JSON.stringify(teacherScores));
             } catch (e) {
                 console.warn("Gagal menyimpan nilai ke localStorage:", e);
+            }
+        }
+
+        function getRequiredQuestions() {
+            return [1, 2, 3, 4, 5, 6, 7, 8, 9];
+        }
+
+        function startAutoRefreshTimer(mode) {
+            stopAutoRefreshTimer();
+            currentCountdown = REFRESH_INTERVAL_SECONDS;
+            updateCountdownUI(mode, currentCountdown);
+
+            autoRefreshTimer = setInterval(() => {
+                currentCountdown--;
+                if (currentCountdown <= 0) {
+                    currentCountdown = REFRESH_INTERVAL_SECONDS;
+                    if (mode === 'student') {
+                        executeStudentRefresh(true);
+                    } else if (mode === 'teacher') {
+                        executeTeacherRefresh(true);
+                    }
+                }
+                updateCountdownUI(mode, currentCountdown);
+            }, 1000);
+        }
+
+        function stopAutoRefreshTimer() {
+            if (autoRefreshTimer) {
+                clearInterval(autoRefreshTimer);
+                autoRefreshTimer = null;
             }
         }
 
@@ -846,7 +994,8 @@
             const userVal = document.getElementById('loginTeacherId').value.trim();
             const passVal = document.getElementById('loginTeacherPass').value.trim();
 
-            if (userVal === 'guru' && passVal === 'admin') {
+            // Disandikan dengan Base64 agar tidak terlihat langsung di source code
+            if (btoa(userVal) === 'Z3VydQ==' && btoa(passVal) === 'YWRtaW4=') {
                 currentUser = { role: 'teacher' };
                 isTeacherInspecting = false;
                 showTeacherDashboard();
@@ -865,6 +1014,7 @@
                 banner.classList.remove('hidden');
                 scoreBadge.classList.remove('hidden');
                 recalculateTeacherTotalScore(currentUser.studentObj.id);
+                setScoreSaveStatusUI('saved_local');
             } else {
                 banner.classList.add('hidden');
                 scoreBadge.classList.add('hidden');
@@ -875,7 +1025,7 @@
             document.getElementById('stDashName').textContent = st.name;
             document.getElementById('stDashMatchNote').textContent = `Murid terdaftar atas nama: ${st.name} (Panggilan: "${st.nickname}")`;
 
-            // Render questions instantly on screen
+            // Render soal langsung di layar
             renderStudentQuestions();
 
             executeStudentRefresh(false);
@@ -883,6 +1033,12 @@
         }
 
         function exitTeacherInspection() {
+            // Jika masih ada timer auto-save yang tertunda, langsung kirim ke Sheet sebelum keluar
+            if (scoreAutoSaveTimer) {
+                clearTimeout(scoreAutoSaveTimer);
+                scoreAutoSaveTimer = null;
+                saveCurrentStudentScoreToCloud(false);
+            }
             isTeacherInspecting = false;
             currentUser = { role: 'teacher' };
             showTeacherDashboard();
@@ -1048,7 +1204,7 @@
                                     </div>
                                     <div>
                                         <span class="text-xs font-black text-rose-900 block">Penilaian Guru (Prerogatif)</span>
-                                        <span class="text-[10px] text-rose-700">Isi angka untuk skor soal ini (Otomatis terkalkulasi)</span>
+                                        <span class="text-[10px] text-rose-700">Otomatis tersimpan ke browser & Google Sheet</span>
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-2">
@@ -1065,7 +1221,7 @@
                 container.appendChild(card);
             });
 
-            // Trigger MathJax to render the newly added equations
+            // Trigger MathJax untuk merender equation
             if (window.MathJax) {
                 MathJax.typesetPromise([container]).catch(function (err) {
                     console.log('MathJax rendering error: ' + err.message);
@@ -1092,7 +1248,7 @@
                 const payload = {
                     studentName: st.name,
                     className: currentUser.classCode,
-                    score: 0, // not used
+                    score: 0,
                     submissionTime: new Date().toLocaleString('id-ID'),
                     answers: [{
                         questionNo: qNo,
@@ -1154,7 +1310,7 @@
                 const payload = {
                     studentName: st.name,
                     className: currentUser.classCode,
-                    score: 0, // not used
+                    score: 0,
                     submissionTime: new Date().toLocaleString('id-ID'),
                     answers: [{
                         questionNo: qNo,
@@ -1215,7 +1371,7 @@
                         });
                     });
 
-                    // Sinkronisasi nilai guru dari Spreadsheet jika tersedia
+                    // Sinkronisasi nilai guru dari sheet "Rekap Nilai Guru"
                     if (resData.scores && typeof resData.scores === 'object') {
                         for (let stId in resData.scores) {
                             if (!teacherScores[stId]) teacherScores[stId] = {};
@@ -1329,7 +1485,7 @@
             if (!teacherScores[studentId]) teacherScores[studentId] = {};
             teacherScores[studentId][qNo] = value === '' ? 0 : (parseFloat(value) || 0);
             
-            // 1. Simpan instan ke penyimpanan browser (localStorage)
+            // 1. Simpan instan ke localStorage browser
             saveTeacherScoresLocal();
             recalculateTeacherTotalScore(studentId);
             renderTeacherTable();
@@ -1338,6 +1494,7 @@
             setScoreSaveStatusUI('saving');
             if (scoreAutoSaveTimer) clearTimeout(scoreAutoSaveTimer);
             scoreAutoSaveTimer = setTimeout(() => {
+                scoreAutoSaveTimer = null;
                 saveCurrentStudentScoreToCloud(false);
             }, 1200);
         }
@@ -1436,7 +1593,7 @@
                 });
             });
 
-            // Gunakan fallback textarea agar selalu berhasil di semua browser/iframe
+            // Menggunakan execCommand agar kompatibel dengan berbagai browser dan iframe
             const textArea = document.createElement("textarea");
             textArea.value = tsv;
             textArea.style.position = "fixed";
@@ -1469,7 +1626,7 @@
         }
 
         function exportTeacherSummaryExcel() {
-            let csvContent = "data:text/csv;charset=utf-8,Kelas,Nama Murid,Nama Panggilan,Beban Soal,Progres Upload,Status\n";
+            let csvContent = "data:text/csv;charset=utf-8,Kelas,Nama Murid,Nama Panggilan,Beban Soal,Progres Upload,Status,Nilai Total Guru\n";
 
             ['7.3', '7.4'].forEach(cls => {
                 STUDENTS_DATA[cls].forEach(st => {
@@ -1477,11 +1634,18 @@
                     const uploadedMap = studentSubmissions[st.id] || {};
                     const uploadedCount = Object.keys(uploadedMap).length;
 
+                    let teacherTotal = 0;
+                    if (teacherScores[st.id]) {
+                        for (let q in teacherScores[st.id]) {
+                            teacherTotal += (teacherScores[st.id][q] || 0);
+                        }
+                    }
+
                     let status = "Belum";
                     if (uploadedCount === requiredQNos.length) status = "Lengkap";
                     else if (uploadedCount > 0) status = "Sebagian";
 
-                    csvContent += `"${cls}","${st.name}","${st.nickname}",${requiredQNos.length},${uploadedCount},"${status}"\n`;
+                    csvContent += `"${cls}","${st.name}","${st.nickname}",${requiredQNos.length},${uploadedCount},"${status}",${teacherTotal}\n`;
                 });
             });
 
@@ -1587,6 +1751,13 @@
                     const uploadedMap = studentSubmissions[st.id] || {};
                     const uploadedCount = Object.keys(uploadedMap).length;
 
+                    let teacherTotal = 0;
+                    if (teacherScores[st.id]) {
+                        for (let q in teacherScores[st.id]) {
+                            teacherTotal += (teacherScores[st.id][q] || 0);
+                        }
+                    }
+
                     let statusStr = "Belum Upload";
                     if (uploadedCount === requiredQNos.length) statusStr = "Lengkap";
                     else if (uploadedCount > 0) statusStr = `Sebagian (${uploadedCount}/${requiredQNos.length})`;
@@ -1600,6 +1771,7 @@
                         </td>
                         <td class="border border-slate-300 p-1.5 text-center font-medium">${requiredQNos.length} Soal</td>
                         <td class="border border-slate-300 p-1.5 text-center font-bold text-blue-700">${uploadedCount}</td>
+                        <td class="border border-slate-300 p-1.5 text-center font-black text-rose-700">${teacherTotal}</td>
                         <td class="border border-slate-300 p-1.5 text-center font-bold ${statusStr === 'Lengkap' ? 'text-emerald-700' : 'text-slate-600'}">${statusStr}</td>
                     `;
                     tbody.appendChild(tr);
